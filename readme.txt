@@ -5,4 +5,4 @@ demo:
 https://jiechau.gitlab.io/note_trainer/
 
 demo:
-
+https://jiechau.github.io/note_trainer/
