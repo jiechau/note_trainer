@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Note Trainer (Naturals G3-C6)</title>
-    <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/releases/vexflow-min.js"></script>
+    <title>Music Note Trainer</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -16,7 +15,6 @@
             background-color: #f0f2f5;
             margin: 0;
         }
-
         .container {
             background: white;
             padding: 30px;
@@ -26,209 +24,40 @@
             max-width: 500px;
             width: 90%;
         }
-
         h1 {
             color: #333;
-            font-size: 1.5rem;
             margin-bottom: 20px;
         }
-
-        #notation {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            /* Increased height slightly to accommodate low G3 and high C6 */
-            min-height: 160px; 
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
-
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-bottom: 20px;
+        li {
+            margin: 15px 0;
         }
-
-        button {
-            padding: 12px 24px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.1s, background-color 0.2s;
+        a {
+            text-decoration: none;
+            color: #2196F3;
+            font-size: 1.2rem;
             font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-block;
         }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        #btn-answer {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        #btn-next {
+        a:hover {
             background-color: #2196F3;
             color: white;
-        }
-
-        #result {
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #333;
-            font-weight: bold;
-            background-color: #e8f5e9;
-            border-radius: 8px;
-            opacity: 0; 
-            transition: opacity 0.3s;
-        }
-
-        #result.show {
-            opacity: 1;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>視譜聽音訓練 (G3 - C6)</h1>
-        
-        <div id="notation"></div>
-
-        <div class="controls">
-            <button id="btn-answer">看答案 & 聽聲音</button>
-            <button id="btn-next">下一題</button>
-        </div>
-
-        <div id="result">
-            <span id="note-text"></span>
-        </div>
+        <h1>Music Note Trainer</h1>
+        <ul>
+            <li><a href="Treble-Clef-Sight-reading.html">Treble Clef Sight-reading</a></li>
+        </ul>
     </div>
-
-    <script>
-        window.onload = function() {
-            if (typeof Vex === 'undefined') {
-                alert("Error: VexFlow library not loaded. Please check internet connection.");
-                return;
-            }
-            initGame();
-        };
-
-        let notesData = [];
-        let currentNote = null;
-        let audioCtx = null;
-
-        function initGame() {
-            // === 1. Define Notes (Naturals Only, G3 to C6) ===
-            notesData = [
-                // Octave 3 (Below Middle C)
-                { key: "g/3", name: "G3", freq: 196.00 },
-                { key: "a/3", name: "A3", freq: 220.00 },
-                { key: "b/3", name: "B3", freq: 246.94 },
-                
-                // Octave 4 (Middle Range)
-                { key: "c/4", name: "C4 (Middle C)", freq: 261.63 },
-                { key: "d/4", name: "D4", freq: 293.66 },
-                { key: "e/4", name: "E4", freq: 329.63 },
-                { key: "f/4", name: "F4", freq: 349.23 },
-                { key: "g/4", name: "G4", freq: 392.00 },
-                { key: "a/4", name: "A4", freq: 440.00 },
-                { key: "b/4", name: "B4", freq: 493.88 },
-
-                // Octave 5 (High Range)
-                { key: "c/5", name: "C5", freq: 523.25 },
-                { key: "d/5", name: "D5", freq: 587.33 },
-                { key: "e/5", name: "E5", freq: 659.25 },
-                { key: "f/5", name: "F5", freq: 698.46 },
-                { key: "g/5", name: "G5", freq: 783.99 },
-                { key: "a/5", name: "A5", freq: 880.00 },
-                { key: "b/5", name: "B5", freq: 987.77 },
-
-                // Octave 6
-                { key: "c/6", name: "C6", freq: 1046.50 }
-            ];
-
-            document.getElementById("btn-next").addEventListener("click", nextQuestion);
-            document.getElementById("btn-answer").addEventListener("click", showAnswer);
-
-            nextQuestion();
-        }
-
-        function drawQuestion(noteObj) {
-            const div = document.getElementById("notation");
-            div.innerHTML = ""; 
-
-            const { Renderer, Stave, StaveNote, Formatter } = Vex.Flow;
-
-            // Resize height to 160 to fit lower G3 and higher C6 comfortably
-            const renderer = new Renderer(div, Renderer.Backends.SVG);
-            renderer.resize(200, 160); 
-            const context = renderer.getContext();
-
-            // Draw Stave (positioned slightly lower to fit C6)
-            const stave = new Stave(10, 30, 180);
-            stave.addClef("treble").setContext(context).draw();
-
-            // Draw Note
-            const noteParams = { keys: [noteObj.key], duration: "q" };
-            const note = new StaveNote(noteParams);
-
-            // No accidental logic needed anymore
-
-            Formatter.FormatAndDraw(context, stave, [note]);
-        }
-
-        function nextQuestion() {
-            const randomIndex = Math.floor(Math.random() * notesData.length);
-            currentNote = notesData[randomIndex];
-            drawQuestion(currentNote);
-
-            const resultDiv = document.getElementById("result");
-            resultDiv.classList.remove("show");
-            document.getElementById("btn-answer").disabled = false;
-        }
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function playTone(freq) {
-            initAudio();
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-
-            osc.type = 'triangle';
-            osc.frequency.value = freq;
-
-            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0); // Slightly shorter decay for clearer distinction
-
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1.0);
-        }
-
-        function showAnswer() {
-            if (!currentNote) return;
-            const resultDiv = document.getElementById("result");
-            const noteText = document.getElementById("note-text");
-            
-            noteText.textContent = `${currentNote.name}`;
-            resultDiv.classList.add("show");
-            playTone(currentNote.freq);
-        }
-    </script>
 </body>
 </html>
