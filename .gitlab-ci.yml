@@ -3,6 +3,7 @@ pages:
   script:
     - mkdir -p public
     - cp *.html public/
+    - cp *.svg public/
     - cp readme.txt public/
   artifacts:
     paths:
