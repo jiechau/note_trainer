@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +23,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
             max-width: 500px;
             width: 90%;
@@ -39,7 +40,7 @@
             justify-content: center;
             margin-bottom: 20px;
             /* Increased height slightly to accommodate low G3 and high C6 */
-            min-height: 160px; 
+            min-height: 160px;
         }
 
         .controls {
@@ -83,7 +84,7 @@
             font-weight: bold;
             background-color: #e8f5e9;
             border-radius: 8px;
-            opacity: 0; 
+            opacity: 0;
             transition: opacity 0.3s;
         }
 
@@ -109,6 +110,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -119,7 +121,7 @@
             <select id="range-end"></select>
         </div>
         <h1>Treble Clef Sight-reading</h1>
-        
+
         <div id="notation"></div>
 
         <div class="controls">
@@ -133,7 +135,7 @@
     </div>
 
     <script>
-        window.onload = function() {
+        window.onload = function () {
             if (typeof Vex === 'undefined') {
                 alert("Error: VexFlow library not loaded. Please check internet connection.");
                 return;
@@ -153,7 +155,7 @@
                 { key: "g/3", name: "G3", freq: 196.00 },
                 { key: "a/3", name: "A3", freq: 220.00 },
                 { key: "b/3", name: "B3", freq: 246.94 },
-                
+
                 // Octave 4 (Middle Range)
                 { key: "c/4", name: "C4 (Middle C)", freq: 261.63 },
                 { key: "d/4", name: "D4", freq: 293.66 },
@@ -216,7 +218,7 @@
         function updateActiveNotes() {
             const startSelect = document.getElementById("range-start");
             const endSelect = document.getElementById("range-end");
-            
+
             let startIndex = parseInt(startSelect.value);
             let endIndex = parseInt(endSelect.value);
 
@@ -236,17 +238,23 @@
 
         function drawQuestion(noteObj) {
             const div = document.getElementById("notation");
-            div.innerHTML = ""; 
+            div.innerHTML = "";
 
             const { Renderer, Stave, StaveNote, Formatter } = Vex.Flow;
 
-            // Resize height to 160 to fit lower G3 and higher C6 comfortably
-            const renderer = new Renderer(div, Renderer.Backends.SVG);
-            renderer.resize(200, 160); 
-            const context = renderer.getContext();
+            // Scale factor for larger notation
+            const scale = 1.5;
+            const width = 220;
+            const height = 180;
 
-            // Draw Stave (positioned slightly lower to fit C6)
-            const stave = new Stave(10, 30, 180);
+            // Resize renderer to accommodate scaled drawing
+            const renderer = new Renderer(div, Renderer.Backends.SVG);
+            renderer.resize(width * scale, height * scale);
+            const context = renderer.getContext();
+            context.scale(scale, scale);
+
+            // Draw Stave
+            const stave = new Stave(10, 30, width - 20);
             stave.addClef("treble").setContext(context).draw();
 
             // Draw Note
@@ -302,11 +310,12 @@
             if (!currentNote) return;
             const resultDiv = document.getElementById("result");
             const noteText = document.getElementById("note-text");
-            
+
             noteText.textContent = `${currentNote.name}`;
             resultDiv.classList.add("show");
             playTone(currentNote.freq);
         }
     </script>
 </body>
+
 </html>

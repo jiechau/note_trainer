@@ -230,13 +230,19 @@
 
             const { Renderer, Stave, StaveNote, Formatter } = Vex.Flow;
 
-            // Resize height to 160 to fit lower notes comfortably
-            const renderer = new Renderer(div, Renderer.Backends.SVG);
-            renderer.resize(200, 160); 
-            const context = renderer.getContext();
+            // Scale factor for larger notation
+            const scale = 1.5;
+            const width = 220;
+            const height = 180;
 
-            // Draw Stave (positioned slightly lower)
-            const stave = new Stave(10, 30, 180);
+            // Resize renderer to accommodate scaled drawing
+            const renderer = new Renderer(div, Renderer.Backends.SVG);
+            renderer.resize(width * scale, height * scale); 
+            const context = renderer.getContext();
+            context.scale(scale, scale);
+
+            // Draw Stave
+            const stave = new Stave(10, 30, width - 20);
             stave.addClef("bass").setContext(context).draw();
 
             // Draw Note
