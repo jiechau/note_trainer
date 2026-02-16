@@ -7,6 +7,7 @@ index.html 這是主頁
 可以點選進入: 
 高音譜 單音 訓練 Treble Clef Sight-reading
 低音譜 單音 訓練 Bass Clef Sight-reading
+你需要完成的任務，頁面顯示如 index.png
 
 Treble-Clef-Sight-reading.html
 這是 高音譜 單音 訓練。
@@ -14,6 +15,7 @@ Treble-Clef-Sight-reading.html
 然後是 高音譜，你在上面隨機放一個 音符 note. 
 下面有一個小按鈕 ’Show Answer & Play Sound‘，當使用者按下 ‘Show Answer & Play Sound’ 時，顯示出這個 note 的音名，例如 C4 D4 E4 C4#，並且在 browser 發出那個聲音. 
 另外有一個按鈕時 ‘Next Question’， 就顯示新的一題
+你需要完成的任務，頁面顯示如 Treble-Clef-Sight-reading.png
 
 Bass-Clef-Sight-reading.html
 這是 低音譜 單音 訓練。
@@ -21,13 +23,12 @@ Bass-Clef-Sight-reading.html
 然後是 低音譜，你在上面隨機放一個 音符 note. 
 下面有一個小按鈕 ’Show Answer & Play Sound‘，當使用者按下 ‘Show Answer & Play Sound’ 時，顯示出這個 note 的音名，例如 C3 D3 E3 C3#，並且在 browser 發出那個聲音. 
 另外有一個按鈕時 ‘Next Question’， 就顯示新的一題
-
+你需要完成的任務，頁面顯示如 Bass-Clef-Sight-reading.png
 
 
 專案目錄結構:
 .
 ├── readme.txt 這個說明檔
-├── favicon.svg 
 ├── index.html 主畫面
 ├── Treble-Clef-Sight-reading.html 高音譜 單音 訓練
 └── Bass-Clef-Sight-reading.html 低音譜 單音 訓練
