@@ -151,9 +151,18 @@
         let audioCtx = null;
 
         function initGame() {
-            // === 1. Define Notes (Naturals Only, E2 to C4) ===
+            // === 1. Define Notes (Naturals Only, E1 to C5) ===
             allNotes = [
+                // Octave 1
+                { key: "e/1", name: "E1", freq: 41.20 },
+                { key: "f/1", name: "F1", freq: 43.65 },
+                { key: "g/1", name: "G1", freq: 49.00 },
+                { key: "a/1", name: "A1", freq: 55.00 },
+                { key: "b/1", name: "B1", freq: 61.74 },
+
                 // Octave 2
+                { key: "c/2", name: "C2", freq: 65.41 },
+                { key: "d/2", name: "D2", freq: 73.42 },
                 { key: "e/2", name: "E2", freq: 82.41 },
                 { key: "f/2", name: "F2", freq: 87.31 },
                 { key: "g/2", name: "G2", freq: 98.00 },
@@ -170,7 +179,16 @@
                 { key: "b/3", name: "B3", freq: 246.94 },
 
                 // Octave 4
-                { key: "c/4", name: "C4 (Middle C)", freq: 261.63 }
+                { key: "c/4", name: "C4 (Middle C)", freq: 261.63 },
+                { key: "d/4", name: "D4", freq: 293.66 },
+                { key: "e/4", name: "E4", freq: 329.63 },
+                { key: "f/4", name: "F4", freq: 349.23 },
+                { key: "g/4", name: "G4", freq: 392.00 },
+                { key: "a/4", name: "A4", freq: 440.00 },
+                { key: "b/4", name: "B4", freq: 493.88 },
+
+                // Octave 5
+                { key: "c/5", name: "C5", freq: 523.25 }
             ];
 
             initRangeSelectors();
@@ -186,7 +204,9 @@
             const startSelect = document.getElementById("range-start");
             const endSelect = document.getElementById("range-end");
 
-            allNotes.forEach((note, index) => {
+            for (let index = allNotes.length - 1; index >= 0; index--) {
+                const note = allNotes[index];
+
                 const optionStart = document.createElement("option");
                 optionStart.value = index;
                 optionStart.text = note.name;
@@ -196,7 +216,7 @@
                 optionEnd.value = index;
                 optionEnd.text = note.name;
                 endSelect.add(optionEnd);
-            });
+            }
 
             // Set default range (e.g., C3 to C4)
             // Find indices for C3 and C4

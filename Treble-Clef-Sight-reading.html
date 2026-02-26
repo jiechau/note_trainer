@@ -153,9 +153,13 @@
         let audioCtx = null;
 
         function initGame() {
-            // === 1. Define Notes (Naturals Only, G3 to C6) ===
+            // === 1. Define Notes (Naturals Only, C3 to A6) ===
             allNotes = [
                 // Octave 3 (Below Middle C)
+                { key: "c/3", name: "C3", freq: 130.81 },
+                { key: "d/3", name: "D3", freq: 146.83 },
+                { key: "e/3", name: "E3", freq: 164.81 },
+                { key: "f/3", name: "F3", freq: 174.61 },
                 { key: "g/3", name: "G3", freq: 196.00 },
                 { key: "a/3", name: "A3", freq: 220.00 },
                 { key: "b/3", name: "B3", freq: 246.94 },
@@ -179,7 +183,12 @@
                 { key: "b/5", name: "B5", freq: 987.77 },
 
                 // Octave 6
-                { key: "c/6", name: "C6", freq: 1046.50 }
+                { key: "c/6", name: "C6", freq: 1046.50 },
+                { key: "d/6", name: "D6", freq: 1174.66 },
+                { key: "e/6", name: "E6", freq: 1318.51 },
+                { key: "f/6", name: "F6", freq: 1396.91 },
+                { key: "g/6", name: "G6", freq: 1567.98 },
+                { key: "a/6", name: "A6", freq: 1760.00 }
             ];
 
             initRangeSelectors();
@@ -195,7 +204,9 @@
             const startSelect = document.getElementById("range-start");
             const endSelect = document.getElementById("range-end");
 
-            allNotes.forEach((note, index) => {
+            for (let index = allNotes.length - 1; index >= 0; index--) {
+                const note = allNotes[index];
+
                 const optionStart = document.createElement("option");
                 optionStart.value = index;
                 optionStart.text = note.name;
@@ -205,7 +216,7 @@
                 optionEnd.value = index;
                 optionEnd.text = note.name;
                 endSelect.add(optionEnd);
-            });
+            }
 
             // Set default range (e.g., C4 to C5)
             // Find indices for C4 and C5
