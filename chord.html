@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chord Lookup</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.6rem;
+      color: #c0a8ff;
+      letter-spacing: 2px;
+    }
+
+    #rows-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .chord-row {
+      display: flex;
+      align-items: center;
+      background: #16213e;
+      border-radius: 10px;
+      padding: 12px 16px;
+      gap: 16px;
+      border: 1px solid #2a2a5a;
+    }
+
+    .row-number {
+      font-size: 0.85rem;
+      color: #888;
+      min-width: 20px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    select {
+      background: #0f3460;
+      color: #e0e0e0;
+      border: 1px solid #4444aa;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aaa'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      padding-right: 28px;
+    }
+
+    select:hover { border-color: #8888ff; }
+    select:focus { border-color: #c0a8ff; }
+
+    .chord-name {
+      min-width: 80px;
+      font-weight: bold;
+      font-size: 1.05rem;
+      color: #c0a8ff;
+    }
+
+    .chord-image-wrap {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      min-width: 220px;
+    }
+
+    .chord-image-wrap img {
+      max-height: 80px;
+      max-width: 220px;
+      border-radius: 6px;
+      object-fit: contain;
+      background: #fff;
+      padding: 4px;
+    }
+
+    .chord-image-wrap .placeholder {
+      width: 220px;
+      height: 80px;
+      background: #0a0a20;
+      border-radius: 6px;
+      border: 1px dashed #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Piano Chord Trainer</h1>
+  <div id="rows-container"></div>
+
+  <script>
+    const NOTES = ['C','C#','Db','D','D#','Eb','E','F','F#','Gb','G','G#','Ab','A','A#','Bb','B'];
+    const TYPES = [
+      { label: 'maj7', suffix: 'maj7' },
+      { label: 'min7', suffix: 'm7'   },
+      { label: '7',    suffix: '7'    },
+    ];
+
+    // Maps note name → image filename prefix
+    const NOTE_PREFIX = {
+      'C':  'c',        'C#': 'd_flat_', 'Db': 'd_flat_',
+      'D':  'd',        'D#': 'e_flat_', 'Eb': 'e_flat_',
+      'E':  'e',        'F':  'f',
+      'F#': 'g_flat_',  'Gb': 'g_flat_',
+      'G':  'g',        'G#': 'a_flat_', 'Ab': 'a_flat_',
+      'A':  'a',        'A#': 'b_flat_', 'Bb': 'b_flat_',
+      'B':  'b',
+    };
+
+    function imageFile(note, typeSuffix) {
+      return `chords/${NOTE_PREFIX[note]}${typeSuffix}.png`;
+    }
+
+    function createRow(index) {
+      const row = document.createElement('div');
+      row.className = 'chord-row';
+
+      const num = document.createElement('span');
+      num.className = 'row-number';
+      num.textContent = index + 1;
+
+      // Note selector
+      const noteSelect = document.createElement('select');
+      noteSelect.setAttribute('aria-label', 'Note');
+      NOTES.forEach(n => {
+        const opt = document.createElement('option');
+        opt.value = n;
+        opt.textContent = n;
+        noteSelect.appendChild(opt);
+      });
+      // Spread notes across 8 rows (C, D, E, F, G, A, B, C#)
+      const defaultNotes = ['C','D','E','F','G','A','B','C#'];
+      noteSelect.value = defaultNotes[index] || 'C';
+
+      // Type selector
+      const typeSelect = document.createElement('select');
+      typeSelect.setAttribute('aria-label', 'Chord type');
+      TYPES.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.suffix;
+        opt.textContent = t.label;
+        typeSelect.appendChild(opt);
+      });
+
+      // Chord name label
+      const chordName = document.createElement('span');
+      chordName.className = 'chord-name';
+
+      // Image area
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'chord-image-wrap';
+      const img = document.createElement('img');
+      img.alt = '';
+      imgWrap.appendChild(img);
+
+      function update() {
+        const note = noteSelect.value;
+        const typeSuffix = typeSelect.value;
+        const typeLabel = TYPES.find(t => t.suffix === typeSuffix).label;
+        chordName.textContent = `${note}${typeLabel}`;
+        const src = imageFile(note, typeSuffix);
+        img.src = src;
+        img.alt = `${note} ${typeLabel} chord`;
+        img.style.display = '';
+        img.onerror = () => { img.style.display = 'none'; };
+      }
+
+      noteSelect.addEventListener('change', update);
+      typeSelect.addEventListener('change', update);
+
+      const controls = document.createElement('div');
+      controls.className = 'controls';
+      controls.appendChild(noteSelect);
+      controls.appendChild(typeSelect);
+
+      row.appendChild(num);
+      row.appendChild(controls);
+      row.appendChild(chordName);
+      row.appendChild(imgWrap);
+
+      update();
+      return row;
+    }
+
+    const container = document.getElementById('rows-container');
+    for (let i = 0; i < 8; i++) {
+      container.appendChild(createRow(i));
+    }
+  </script>
+</body>
+</html>
