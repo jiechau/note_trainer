@@ -27,7 +27,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      max-width: 900px;
+      width: fit-content;
       margin: 0 auto;
     }
 
@@ -39,6 +39,7 @@
       padding: 12px 16px;
       gap: 16px;
       border: 1px solid #2a2a5a;
+      width: 100%;
     }
 
     .row-number {
@@ -73,11 +74,23 @@
     select:hover { border-color: #8888ff; }
     select:focus { border-color: #c0a8ff; }
 
+    .chord-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+    }
+
     .chord-name {
-      min-width: 80px;
       font-weight: bold;
       font-size: 2.1rem;
       color: #ff3333;
+    }
+
+    .chord-symbol {
+      font-weight: bold;
+      font-size: 2.1rem;
+      color: #ffffff;
     }
 
     .chord-image-wrap {
@@ -85,12 +98,10 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      min-width: 440px;
     }
 
     .chord-image-wrap img {
-      max-height: 160px;
-      max-width: 440px;
+      height: 160px;
       border-radius: 6px;
       object-fit: contain;
       background: #fff;
@@ -98,7 +109,7 @@
     }
 
     .chord-image-wrap .placeholder {
-      width: 440px;
+      min-width: 300px;
       height: 160px;
       background: #0a0a20;
       border-radius: 6px;
@@ -118,13 +129,13 @@
   <script>
     const NOTES = ['C','C#','Db','D','D#','Eb','E','F','F#','Gb','G','G#','Ab','A','A#','Bb','B'];
     const TYPES = [
-      { label: 'maj7', suffix: 'maj7'  },
-      { label: 'm7',   suffix: 'm7'    },
-      { label: '7',    suffix: '7'     },
-      { label: '6',    suffix: '6'     },
-      { label: 'm6',   suffix: 'm6'    },
-      { label: 'dim7', suffix: 'dim7'  },
-      { label: 'm7b5', suffix: 'm7b5'  },
+      { label: 'maj7', suffix: 'maj7',  sym: '△'  },
+      { label: 'm7',   suffix: 'm7',    sym: '-7' },
+      { label: '7',    suffix: '7',     sym: '7'  },
+      { label: '6',    suffix: '6',     sym: '6'  },
+      { label: 'm6',   suffix: 'm6',    sym: 'm6' },
+      { label: 'dim7', suffix: 'dim7',  sym: '°'  },
+      { label: 'm7b5', suffix: 'm7b5',  sym: 'ø'  },
     ];
 
     // Maps note name → image filename prefix
@@ -173,9 +184,20 @@
         typeSelect.appendChild(opt);
       });
 
+      // Chord labels wrapper
+      const labelWrap = document.createElement('div');
+      labelWrap.className = 'chord-label';
+
       // Chord name label
       const chordName = document.createElement('span');
       chordName.className = 'chord-name';
+
+      // Symbol label
+      const chordSymbol = document.createElement('span');
+      chordSymbol.className = 'chord-symbol';
+
+      labelWrap.appendChild(chordName);
+      labelWrap.appendChild(chordSymbol);
 
       // Image area
       const imgWrap = document.createElement('div');
@@ -187,8 +209,10 @@
       function update() {
         const note = noteSelect.value;
         const typeSuffix = typeSelect.value;
-        const typeLabel = TYPES.find(t => t.suffix === typeSuffix).label;
+        const typeObj = TYPES.find(t => t.suffix === typeSuffix);
+        const typeLabel = typeObj.label;
         chordName.textContent = `${note}${typeLabel}`;
+        chordSymbol.textContent = `${note}${typeObj.sym}`;
         const src = imageFile(note, typeSuffix);
         img.src = src;
         img.alt = `${note} ${typeLabel} chord`;
@@ -206,7 +230,7 @@
 
       row.appendChild(num);
       row.appendChild(controls);
-      row.appendChild(chordName);
+      row.appendChild(labelWrap);
       row.appendChild(imgWrap);
 
       update();
