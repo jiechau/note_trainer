@@ -274,7 +274,7 @@
             stave.addClef("treble").setContext(context).draw();
 
             // Draw Note
-            const noteParams = { keys: [noteObj.key], duration: "q" };
+            const noteParams = { keys: [noteObj.key], duration: "q", auto_stem: true };
             const note = new StaveNote(noteParams);
 
             // No accidental logic needed anymore

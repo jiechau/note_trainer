@@ -275,7 +275,7 @@
             // but we need to make sure the key is correct (e.g. "c/3").
             // StaveNote needs clef property to know how to render ledger lines correctly relative to the staff?
             // Actually StaveNote takes 'clef' in options to help with positioning.
-            const noteParams = { keys: [noteObj.key], duration: "q", clef: "bass" };
+            const noteParams = { keys: [noteObj.key], duration: "q", clef: "bass", auto_stem: true };
             const note = new StaveNote(noteParams);
 
             Formatter.FormatAndDraw(context, stave, [note]);
