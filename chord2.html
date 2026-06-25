@@ -157,21 +157,29 @@
 
       const startAbs = 48;   // C4
       const numSemis = 24;   // two octaves: C4 .. B5
-      const Ww = 34, Wh = 200, Bw = 20, Bh = 125;
+      const Ww = 34, Wh = 130, Bw = 20, Bh = 82;
       const HL = '#c0504d';
+      // Horizontal nudge (fraction of white width) so black keys sit
+      // realistically within their 2- and 3-key groups, not dead-centered
+      // on the white-key boundary.
+      const BLACK_OFFSET = { 1: -0.12, 3: 0.12, 6: -0.18, 8: 0, 10: 0.18 };
 
       let whiteIndex = 0, whites = '', blacks = '', dots = '';
       for (let s = startAbs; s < startAbs + numSemis; s++) {
+        const pc = s % 12;
         const hl = chordSet.has(s);
-        if (BLACK_PCS.has(s % 12)) {
-          const x = whiteIndex * Ww - Bw / 2;
+        if (BLACK_PCS.has(pc)) {
+          const center = (whiteIndex + BLACK_OFFSET[pc]) * Ww;
+          const x = center - Bw / 2;
           blacks += `<rect x="${x}" y="0" width="${Bw}" height="${Bh}" fill="${hl ? HL : '#1a1a1a'}" stroke="#000" stroke-width="1"/>`;
         } else {
           const x = whiteIndex * Ww;
           whites += `<rect x="${x}" y="0" width="${Ww}" height="${Wh}" fill="${hl ? HL : '#fff'}" stroke="#333" stroke-width="1"/>`;
-          // Green marker on every C key for quick orientation
-          if (s % 12 === 0) {
-            dots += `<circle cx="${x + Ww / 2}" cy="14" r="5" fill="#2ecc40"/>`;
+          // Green marker on every C key, centered in the part of the key
+          // left of (not overlapped by) the C# black key.
+          if (pc === 0) {
+            const cSharpLeft = (whiteIndex + 1 + BLACK_OFFSET[1]) * Ww - Bw / 2;
+            dots += `<circle cx="${(x + cSharpLeft) / 2}" cy="12" r="4.5" fill="#2ecc40"/>`;
           }
           whiteIndex++;
         }
