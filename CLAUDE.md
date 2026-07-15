@@ -15,6 +15,7 @@ A static, multi-page web app for practising music note recognition and chord loo
 ## Page map
 
 - `index.html` — home page linking to the tools.
+- `sight_reading/index.html` — sight-reading index linking to the two trainers.
 - `sight_reading/Treble-Clef-Sight-reading.html` / `sight_reading/Bass-Clef-Sight-reading.html` — sight-reading trainers. Render a random note on a staff via **VexFlow** (`Vex.Flow`), reveal the name and play the pitch via the **Web Audio API** (oscillator). Each has a Range selector (`#range-start` / `#range-end`) to constrain the practiced notes.
 - `chord_lookup/index.html` — chord-lookup page. Renders piano keyboards as inline **SVG** generated in `renderPiano()`; chord tones are highlighted, every C key gets a green dot. Driven by two data tables: chord types and `CHORD_INTERVALS` (semitone offsets per type). No external assets.
 - `bookmark/index.html` + `bookmark/*.html` — static lists of YouTube study links (index page plus per-song subpages).

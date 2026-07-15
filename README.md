@@ -47,6 +47,7 @@ A curated list of YouTube links for jazz / piano learning resources (Fly Me to t
 .
 ├── index.html                          # Home — links to all tools
 ├── sight_reading/
+│   ├── index.html                      # Sight-reading index (links to both trainers)
 │   ├── Treble-Clef-Sight-reading.html  # Treble clef sight-reading trainer
 │   └── Bass-Clef-Sight-reading.html    # Bass clef sight-reading trainer
 ├── chord_lookup/
