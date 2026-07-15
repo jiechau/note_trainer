@@ -5,6 +5,7 @@ pages:
     - cp *.html public/
     - cp *.svg public/
     - cp readme.txt public/
+    - cp -r sight_reading bookmark chord_lookup public/
   artifacts:
     paths:
       - public

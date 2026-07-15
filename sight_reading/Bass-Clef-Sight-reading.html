@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, nocache">
-    <title>Music Note Trainer (Treble Clef)</title>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <title>Music Note Trainer (Bass Clef)</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/releases/vexflow-min.js"></script>
     <style>
         body {
@@ -24,7 +23,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             text-align: center;
             max-width: 500px;
             width: 90%;
@@ -40,8 +39,8 @@
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
-            /* Increased height slightly to accommodate low G3 and high C6 */
-            min-height: 160px;
+            /* Increased height slightly to accommodate low notes */
+            min-height: 160px; 
         }
 
         .controls {
@@ -85,7 +84,7 @@
             font-weight: bold;
             background-color: #e8f5e9;
             border-radius: 8px;
-            opacity: 0;
+            opacity: 0; 
             transition: opacity 0.3s;
         }
 
@@ -111,7 +110,6 @@
         }
     </style>
 </head>
-
 <body>
 
     <div class="container">
@@ -121,8 +119,8 @@
             <span> to </span>
             <select id="range-end"></select>
         </div>
-        <h1>Treble Clef Sight-reading</h1>
-
+        <h1>Bass Clef Sight-reading</h1>
+        
         <div id="notation"></div>
 
         <div class="controls">
@@ -135,12 +133,12 @@
         </div>
 
         <div style="margin-top: 20px;">
-            <a href="index.html" style="text-decoration: none; color: #666; font-size: 14px;">&larr; Back to Main Page</a>
+            <a href="../index.html" style="text-decoration: none; color: #666; font-size: 14px;">&larr; Back to Main Page</a>
         </div>
     </div>
 
     <script>
-        window.onload = function () {
+        window.onload = function() {
             if (typeof Vex === 'undefined') {
                 alert("Error: VexFlow library not loaded. Please check internet connection.");
                 return;
@@ -154,9 +152,25 @@
         let audioCtx = null;
 
         function initGame() {
-            // === 1. Define Notes (Naturals Only, C3 to A6) ===
+            // === 1. Define Notes (Naturals Only, E1 to C5) ===
             allNotes = [
-                // Octave 3 (Below Middle C)
+                // Octave 1
+                { key: "e/1", name: "E1", freq: 41.20 },
+                { key: "f/1", name: "F1", freq: 43.65 },
+                { key: "g/1", name: "G1", freq: 49.00 },
+                { key: "a/1", name: "A1", freq: 55.00 },
+                { key: "b/1", name: "B1", freq: 61.74 },
+
+                // Octave 2
+                { key: "c/2", name: "C2", freq: 65.41 },
+                { key: "d/2", name: "D2", freq: 73.42 },
+                { key: "e/2", name: "E2", freq: 82.41 },
+                { key: "f/2", name: "F2", freq: 87.31 },
+                { key: "g/2", name: "G2", freq: 98.00 },
+                { key: "a/2", name: "A2", freq: 110.00 },
+                { key: "b/2", name: "B2", freq: 123.47 },
+
+                // Octave 3
                 { key: "c/3", name: "C3", freq: 130.81 },
                 { key: "d/3", name: "D3", freq: 146.83 },
                 { key: "e/3", name: "E3", freq: 164.81 },
@@ -165,7 +179,7 @@
                 { key: "a/3", name: "A3", freq: 220.00 },
                 { key: "b/3", name: "B3", freq: 246.94 },
 
-                // Octave 4 (Middle Range)
+                // Octave 4
                 { key: "c/4", name: "C4 (Middle C)", freq: 261.63 },
                 { key: "d/4", name: "D4", freq: 293.66 },
                 { key: "e/4", name: "E4", freq: 329.63 },
@@ -174,22 +188,8 @@
                 { key: "a/4", name: "A4", freq: 440.00 },
                 { key: "b/4", name: "B4", freq: 493.88 },
 
-                // Octave 5 (High Range)
-                { key: "c/5", name: "C5", freq: 523.25 },
-                { key: "d/5", name: "D5", freq: 587.33 },
-                { key: "e/5", name: "E5", freq: 659.25 },
-                { key: "f/5", name: "F5", freq: 698.46 },
-                { key: "g/5", name: "G5", freq: 783.99 },
-                { key: "a/5", name: "A5", freq: 880.00 },
-                { key: "b/5", name: "B5", freq: 987.77 },
-
-                // Octave 6
-                { key: "c/6", name: "C6", freq: 1046.50 },
-                { key: "d/6", name: "D6", freq: 1174.66 },
-                { key: "e/6", name: "E6", freq: 1318.51 },
-                { key: "f/6", name: "F6", freq: 1396.91 },
-                { key: "g/6", name: "G6", freq: 1567.98 },
-                { key: "a/6", name: "A6", freq: 1760.00 }
+                // Octave 5
+                { key: "c/5", name: "C5", freq: 523.25 }
             ];
 
             initRangeSelectors();
@@ -219,13 +219,13 @@
                 endSelect.add(optionEnd);
             }
 
-            // Set default range (e.g., C4 to C5)
-            // Find indices for C4 and C5
+            // Set default range (e.g., C3 to C4)
+            // Find indices for C3 and C4
+            const c3Index = allNotes.findIndex(n => n.name.startsWith("C3"));
             const c4Index = allNotes.findIndex(n => n.name.startsWith("C4"));
-            const c5Index = allNotes.findIndex(n => n.name.startsWith("C5"));
 
-            startSelect.value = c4Index !== -1 ? c4Index : 3; // Default to C4 or index 3
-            endSelect.value = c5Index !== -1 ? c5Index : 10; // Default to C5 or index 10
+            startSelect.value = c3Index !== -1 ? c3Index : 5; 
+            endSelect.value = c4Index !== -1 ? c4Index : allNotes.length - 1;
 
             startSelect.addEventListener("change", updateActiveNotes);
             endSelect.addEventListener("change", updateActiveNotes);
@@ -234,15 +234,12 @@
         function updateActiveNotes() {
             const startSelect = document.getElementById("range-start");
             const endSelect = document.getElementById("range-end");
-
+            
             let startIndex = parseInt(startSelect.value);
             let endIndex = parseInt(endSelect.value);
 
             // Ensure start <= end
             if (startIndex > endIndex) {
-                // Swap or adjust? Let's just adjust the one that changed to match
-                // But simpler is to just swap them if they are wrong, or force end to be start
-                // Let's just swap them for better UX if user selects a higher start
                 [startIndex, endIndex] = [endIndex, startIndex];
                 startSelect.value = startIndex;
                 endSelect.value = endIndex;
@@ -254,7 +251,7 @@
 
         function drawQuestion(noteObj) {
             const div = document.getElementById("notation");
-            div.innerHTML = "";
+            div.innerHTML = ""; 
 
             const { Renderer, Stave, StaveNote, Formatter } = Vex.Flow;
 
@@ -265,19 +262,21 @@
 
             // Resize renderer to accommodate scaled drawing
             const renderer = new Renderer(div, Renderer.Backends.SVG);
-            renderer.resize(width * scale, height * scale);
+            renderer.resize(width * scale, height * scale); 
             const context = renderer.getContext();
             context.scale(scale, scale);
 
             // Draw Stave
             const stave = new Stave(10, 30, width - 20);
-            stave.addClef("treble").setContext(context).draw();
+            stave.addClef("bass").setContext(context).draw();
 
             // Draw Note
-            const noteParams = { keys: [noteObj.key], duration: "q", auto_stem: true };
+            // VexFlow automatically handles clef context if we just pass the key, 
+            // but we need to make sure the key is correct (e.g. "c/3").
+            // StaveNote needs clef property to know how to render ledger lines correctly relative to the staff?
+            // Actually StaveNote takes 'clef' in options to help with positioning.
+            const noteParams = { keys: [noteObj.key], duration: "q", clef: "bass", auto_stem: true };
             const note = new StaveNote(noteParams);
-
-            // No accidental logic needed anymore
 
             Formatter.FormatAndDraw(context, stave, [note]);
         }
@@ -313,7 +312,7 @@
 
             gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
             gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0); // Slightly shorter decay for clearer distinction
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0); 
 
             osc.connect(gainNode);
             gainNode.connect(audioCtx.destination);
@@ -326,12 +325,11 @@
             if (!currentNote) return;
             const resultDiv = document.getElementById("result");
             const noteText = document.getElementById("note-text");
-
+            
             noteText.textContent = `${currentNote.name}`;
             resultDiv.classList.add("show");
             playTone(currentNote.freq);
         }
     </script>
 </body>
-
 </html>

@@ -14,25 +14,12 @@ Both trainers display a random note on a staff rendered with [VexFlow](https://w
 
 | Page | Clef | Range |
 |------|------|-------|
-| `Treble-Clef-Sight-reading.html` | Treble clef | C3 – A6 (natural notes) |
-| `Bass-Clef-Sight-reading.html` | Bass clef | Lower range natural notes |
+| `sight_reading/Treble-Clef-Sight-reading.html` | Treble clef | C3 – A6 (natural notes) |
+| `sight_reading/Bass-Clef-Sight-reading.html` | Bass clef | Lower range natural notes |
 
 Both trainers include a **Range** selector at the top so you can narrow practice to a comfortable set of notes.
 
-<!--
-### Piano Chord Lookup (`chord.html`) — deprecated, pending removal
-
-Displays multiple rows, each with:
-- A root note dropdown (C, C#, Db, D … B)
-- A chord-type dropdown (maj7 △, m7 -7, 7, 6, m6, dim7 °, m7b5 ø)
-- A piano keyboard diagram loaded from the `chords/` image library
-
-All 7 chord types across all 12 chromatic roots are covered (84 chord images total).
-
-Superseded by Piano Chord Lookup v2 (`chord2.html`).
--->
-
-### Piano Chord Lookup (`chord2.html`)
+### Piano Chord Lookup (`chord_lookup/`)
 
 A keyboard-based chord reference. The page shows a column of rows, each independently configurable, where every row renders its own piano keyboard with the chord tones highlighted.
 
@@ -48,7 +35,7 @@ The keyboard is drawn live as an inline **SVG** rather than loaded from PNG imag
 
 The page opens with 8 rows pre-filled (C, D, E, F, G, A, B, C#) as a starting point.
 
-### Bookmark (`bookmark.html`)
+### Bookmark (`bookmark/`)
 
 A curated list of YouTube links for jazz / piano learning resources (Fly Me to the Moon, Jazz for Beginners, Jimbo beginner series, etc.).
 
@@ -58,17 +45,19 @@ A curated list of YouTube links for jazz / piano learning resources (Fly Me to t
 
 ```
 .
-├── index.html                      # Home — links to all tools
-├── Treble-Clef-Sight-reading.html  # Treble clef sight-reading trainer
-├── Bass-Clef-Sight-reading.html    # Bass clef sight-reading trainer
-├── chord2.html                     # Piano chord lookup (live SVG keyboard)
-├── chord.html                      # Piano chord lookup, PNG-based (deprecated, pending removal)
-├── bookmark.html                   # YouTube bookmarks
-├── chords/                         # Piano chord diagram images (PNG)
+├── index.html                          # Home — links to all tools
+├── sight_reading/
+│   ├── Treble-Clef-Sight-reading.html  # Treble clef sight-reading trainer
+│   └── Bass-Clef-Sight-reading.html    # Bass clef sight-reading trainer
+├── chord_lookup/
+│   └── index.html                      # Piano chord lookup (live SVG keyboard)
+├── bookmark/
+│   ├── index.html                      # YouTube bookmarks index
+│   └── *.html                          # Per-song bookmark pages
 ├── favicon.svg
 ├── robots.txt
-├── .github/workflows/deploy.yml    # GitHub Pages auto-deploy
-└── .gitlab-ci.yml                  # GitLab Pages auto-deploy
+├── .github/workflows/deploy.yml        # GitHub Pages auto-deploy
+└── .gitlab-ci.yml                      # GitLab Pages auto-deploy
 ```
 
 ---
